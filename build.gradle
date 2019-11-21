@@ -1,0 +1,25 @@
+plugins {
+    id 'java-library'
+}
+
+group = 'com.myseotoolbox'
+version = '1.0.0'
+sourceCompatibility = '1.8'
+
+
+repositories {
+    mavenCentral()
+    maven { url 'https://repo.spring.io/milestone' }
+}
+
+
+dependencies {
+    // This dependency is used internally, and not exposed to consumers on their own compile classpath.
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.10.0'
+    implementation group: 'org.springframework.cloud', name: 'spring-cloud-gcp-pubsub', version: '1.2.0.RC2'
+    implementation 'com.google.guava:guava:27.1-jre'
+    implementation 'org.projectlombok:lombok:1.18.10'
+    annotationProcessor 'org.projectlombok:lombok:1.18.10'
+    // Use JUnit test framework
+    testImplementation 'junit:junit:4.12'
+}
