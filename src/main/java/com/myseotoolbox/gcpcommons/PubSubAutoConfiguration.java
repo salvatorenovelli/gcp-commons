@@ -14,6 +14,7 @@ import org.springframework.cloud.gcp.pubsub.support.converter.JacksonPubSubMessa
 import org.springframework.cloud.gcp.pubsub.support.converter.PubSubMessageConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.context.event.EventListener;
 
 import java.util.List;
@@ -23,6 +24,7 @@ import java.util.List;
 @EnableConfigurationProperties(GcpCommonsPubSubProperties.class)
 @AutoConfigureAfter(GcpContextAutoConfiguration.class)
 @ConditionalOnClass(PubSubTemplate.class)
+@Profile("!test")
 public class PubSubAutoConfiguration {
 
     private final GcpCommonsPubSubProperties pubSubProperties;
