@@ -3,8 +3,12 @@ package com.myseotoolbox.gcpcommons;
 import com.google.pubsub.v1.Topic;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.context.event.ApplicationStartedEvent;
 import org.springframework.cloud.gcp.core.GcpProjectIdProvider;
 import org.springframework.cloud.gcp.pubsub.PubSubAdmin;
+import org.springframework.context.event.EventListener;
+import org.springframework.stereotype.Component;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -13,6 +17,7 @@ import java.util.concurrent.TimeoutException;
 
 @Slf4j
 @RequiredArgsConstructor
+@Component
 public class PubSubConnectionVerification {
 
     public static final int DEFAULT_TIMEOUT = 10;
@@ -20,6 +25,7 @@ public class PubSubConnectionVerification {
     private final PubSubAdmin pubSubAdmin;
     private final String topicName;
 
+    @EventListener(ApplicationStartedEvent.class)
     public void verifyPubSubConnection() {
         try {
             log.info("Verifying pubsub connection. ProjectId: {}", projectIdProvider.getProjectId());

@@ -1,9 +1,10 @@
 plugins {
+    id 'maven-publish'
     id 'java-library'
 }
 
 group = 'com.myseotoolbox'
-version = '1.1.0'
+version = '1.2.0-SNAPSHOT'
 sourceCompatibility = '1.8'
 
 
@@ -12,11 +13,20 @@ repositories {
     maven { url 'https://repo.spring.io/milestone' }
 }
 
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
 
 dependencies {
-    // This dependency is used internally, and not exposed to consumers on their own compile classpath.
-    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.10.0'
+    implementation group: 'org.springframework.boot', name: 'spring-boot-autoconfigure', version: '2.1.0.RELEASE'
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor:2.1.0.RELEASE'
     implementation group: 'org.springframework.cloud', name: 'spring-cloud-gcp-pubsub', version: '1.2.0.RC2'
+    implementation('org.springframework.cloud:spring-cloud-gcp-starter-pubsub:1.1.2.RELEASE')
+
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.10.0'
     implementation 'com.google.guava:guava:27.1-jre'
     implementation 'org.projectlombok:lombok:1.18.10'
     annotationProcessor 'org.projectlombok:lombok:1.18.10'
