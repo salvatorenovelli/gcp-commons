@@ -4,9 +4,12 @@ import com.google.pubsub.v1.Subscription;
 import com.google.pubsub.v1.Topic;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.context.event.ApplicationStartedEvent;
 import org.springframework.cloud.gcp.pubsub.PubSubAdmin;
+import org.springframework.context.event.EventListener;
 import org.springframework.util.Assert;
 
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -21,17 +24,35 @@ class PubSubConnectionVerification {
     private static final int DEFAULT_ACK_DEADLINE_SECONDS = 600;
     private final String projectId;
     private final PubSubAdmin pubSubAdmin;
+    private final GcpCommonsPubSubProperties properties;
 
-    void verifyTopic(String topicName) {
+    @EventListener(ApplicationStartedEvent.class)
+    public void appStarted() {
+        checkTopics();
+        checkSubscriptions();
+    }
 
+    private void checkSubscriptions() {
+        properties.getSubscriptions().forEach(this::verifySubscription);
+    }
+
+    private void checkTopics() {
+        List<String> topics = properties.getTopics();
+        if (topics.size() > 0) {
+            topics.forEach(this::verifyTopic);
+        } else {
+            verifyConnection();
+        }
+    }
+
+    private void verifyTopic(String topicName) {
         log.info("Verifying topic {}. ProjectId: {}", topicName, projectId);
         Topic topic = runWithTimeout(() -> pubSubAdmin.getTopic(topicName));
         Assert.notNull(topic, String.format("Topic '%s' not found in project '%s'", topicName, projectId));
         log.info("Successfully verified topic name '{}': {}", topicName, topic);
-
     }
 
-    public void verifySubscription(String topicName, String subscriptionName) {
+    private void verifySubscription(String topicName, String subscriptionName) {
         runWithTimeout(() -> {
             log.info("Checking if subscription {} exists...", subscriptionName);
             Subscription subscription = pubSubAdmin.getSubscription(subscriptionName);
@@ -47,7 +68,7 @@ class PubSubConnectionVerification {
     }
 
     void verifyConnection() {
-        runWithTimeout(pubSubAdmin::listTopics);
+        runWithTimeout(() -> pubSubAdmin.getTopic("nonexistent"));
     }
 
     private <T> T runWithTimeout(Supplier<T> supplier) {
