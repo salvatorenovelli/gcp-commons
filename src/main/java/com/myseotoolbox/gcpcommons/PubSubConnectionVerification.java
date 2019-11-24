@@ -22,6 +22,7 @@ class PubSubConnectionVerification {
 
     public static final int DEFAULT_TIMEOUT = 10;
     private static final int DEFAULT_ACK_DEADLINE_SECONDS = 600;
+    public static final String FAKE_TOPIC_NAME = "nonexistent";
     private final String projectId;
     private final PubSubAdmin pubSubAdmin;
     private final GcpCommonsPubSubProperties properties;
@@ -68,7 +69,8 @@ class PubSubConnectionVerification {
     }
 
     void verifyConnection() {
-        runWithTimeout(() -> pubSubAdmin.getTopic("nonexistent"));
+        log.info("Checking connection to pub/sub using '{}' topic", FAKE_TOPIC_NAME);
+        runWithTimeout(() -> pubSubAdmin.getTopic(FAKE_TOPIC_NAME));
     }
 
     private <T> T runWithTimeout(Supplier<T> supplier) {

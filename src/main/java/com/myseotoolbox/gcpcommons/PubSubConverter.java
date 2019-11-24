@@ -10,10 +10,11 @@ import java.io.IOException;
 
 @Component
 @RequiredArgsConstructor
-public class PubSubConverter {
+class PubSubConverter<T> {
     private final ObjectMapper objectMapper;
+    private final Class<T> payloadType;
 
-    public <T> T fromPubSubMessage(PubsubMessage message, Class<T> payloadType) {
+    public T fromPubSubMessage(PubsubMessage message) {
         try {
             return objectMapper.readerFor(payloadType).readValue(message.getData().toByteArray());
         } catch (IOException ex) {
