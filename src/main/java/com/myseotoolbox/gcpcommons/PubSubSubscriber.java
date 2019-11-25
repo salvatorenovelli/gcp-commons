@@ -41,6 +41,7 @@ public class PubSubSubscriber<T> {
             if (runConsumer(function, event)) {
                 msg.ack();
             } else {
+                log.info("Processing of event {} was unsuccessful sending NACK", event);
                 msg.nack();
                 executeBackoff();
             }
