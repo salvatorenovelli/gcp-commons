@@ -13,14 +13,12 @@ import org.springframework.cloud.gcp.pubsub.support.converter.JacksonPubSubMessa
 import org.springframework.cloud.gcp.pubsub.support.converter.PubSubMessageConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 
 @Configuration
 @RequiredArgsConstructor
 @EnableConfigurationProperties(GcpCommonsPubSubProperties.class)
 @AutoConfigureAfter(GcpContextAutoConfiguration.class)
 @ConditionalOnClass(GcpCommonsPubSubProperties.class)
-@Profile("!test")
 public class PubSubAutoConfiguration {
     private final GcpCommonsPubSubProperties properties;
 
