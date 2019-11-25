@@ -36,7 +36,7 @@ public class PubSubSubscriber<T> {
     public void subscribe(Function<T, Boolean> function) {
         log.info("Subscribing to {}:{}/{}", projectId, topicName, subscriptionName);
         template.subscribe(subscriptionName, msg -> {
-            T event = pubSubConverter.fromPubSubMessage(msg.getPubsubMessage());
+            T event = pubSubConverter.fromPubSubMessage(new PubsubMessage(msg.getPubsubMessage()));
             log.debug("Event received: {}", msgAsString(msg));
             if (runConsumer(function, event)) {
                 msg.ack();

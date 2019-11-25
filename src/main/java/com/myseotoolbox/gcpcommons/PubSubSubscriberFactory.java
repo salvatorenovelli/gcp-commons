@@ -9,17 +9,22 @@ import org.springframework.cloud.gcp.pubsub.core.subscriber.PubSubSubscriberTemp
 @Slf4j
 public class PubSubSubscriberFactory {
     private final PubSubSubscriberTemplate template;
-    private final ObjectMapper objectMapper;
     private final String projectId;
+    private final MessageConverter converter;
 
-    public PubSubSubscriberFactory(PubSubSubscriberTemplate template, ObjectMapper objectMapper, GcpProjectIdProvider projectIdProvider) {
+    public PubSubSubscriberFactory(PubSubSubscriberTemplate template, MessageConverter converter, GcpProjectIdProvider projectIdProvider) {
         this.template = template;
-        this.objectMapper = objectMapper;
+        this.converter = converter;
         this.projectId = projectIdProvider.getProjectId();
+
     }
 
-    public <T> PubSubSubscriber<T> buildFor(String topicName, String subscriptionName, Class<T> payloadType) {
-        PubSubConverter<T> pubSubConverter = new PubSubConverter<>(objectMapper, payloadType);
+    public PubSubSubscriber<PubsubMessage> buildRaw(String topicName, String subscriptionName) {
+        return new PubSubSubscriber<>(template, m -> m, projectId, topicName, subscriptionName);
+    }
+
+    public <T> PubSubSubscriber<T> buildTyped(String topicName, String subscriptionName, Class<T> payloadType) {
+        PubSubConverter<T> pubSubConverter = new TypedPubSubConverter<T>(payloadType, converter);
         return new PubSubSubscriber<T>(template, pubSubConverter, projectId, topicName, subscriptionName);
     }
 }

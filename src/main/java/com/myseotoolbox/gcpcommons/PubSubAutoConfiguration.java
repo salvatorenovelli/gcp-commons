@@ -25,6 +25,11 @@ public class PubSubAutoConfiguration {
     private final GcpCommonsPubSubProperties properties;
 
     @Bean
+    public MessageConverter getMessageConverter(ObjectMapper mapper) {
+        return new MessageConverter(mapper);
+    }
+
+    @Bean
     public PubSubMessageConverter pubSubMessageConverter(ObjectMapper objectMapper) {
         return new JacksonPubSubMessageConverter(objectMapper);
     }
@@ -35,8 +40,8 @@ public class PubSubAutoConfiguration {
     }
 
     @Bean
-    public PubSubSubscriberFactory getPubSubSubscriberFactory(PubSubSubscriberTemplate template, ObjectMapper objectMapper, GcpProjectIdProvider provider) {
-        return new PubSubSubscriberFactory(template, objectMapper, provider);
+    public PubSubSubscriberFactory getPubSubSubscriberFactory(PubSubSubscriberTemplate template, MessageConverter converter, GcpProjectIdProvider provider) {
+        return new PubSubSubscriberFactory(template, converter, provider);
     }
 
 
