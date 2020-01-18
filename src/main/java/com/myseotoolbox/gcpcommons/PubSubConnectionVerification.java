@@ -49,27 +49,46 @@ class PubSubConnectionVerification {
     private void verifyTopic(String topicName) {
         log.info("Verifying topic {}. ProjectId: {}", topicName, projectId);
         Topic topic = runWithTimeout(() -> pubSubAdmin.getTopic(topicName));
-        Assert.notNull(topic, String.format("Topic '%s' not found in project '%s'", topicName, projectId));
+
+        if (topic == null) {
+            if (properties.createTopicIfMissing()) {
+                log.warn("Topic '{}' did not exist. Creating...", topicName);
+                topic = createTopic(topicName);
+            } else {
+                throw new RuntimeException(String.format("Topic '%s' not found in project '%s'. (auto creation disabled)", topicName, projectId));
+            }
+        }
+
         log.info("Successfully verified topic name '{}': {}", topicName, topic);
     }
 
     private void verifySubscription(String topicName, String subscriptionName) {
-        runWithTimeout(() -> {
-            log.info("Checking if subscription {} exists...", subscriptionName);
-            Subscription subscription = pubSubAdmin.getSubscription(subscriptionName);
-            log.info("Subscription: {}", (subscription + "").replaceAll("\n", ""));
-            if (subscription == null) {
-                log.warn("Subscription did not exist. Recreating... '{}/{}' topic:'{}' ack deadline:{}",
-                        projectId, subscriptionName, topicName, DEFAULT_ACK_DEADLINE_SECONDS);
-                pubSubAdmin.createSubscription(subscriptionName, topicName, DEFAULT_ACK_DEADLINE_SECONDS);
-            }
-            return null;
-        });
+        log.info("Checking if subscription {} exists...", subscriptionName);
+        Subscription subscription = runWithTimeout(() -> pubSubAdmin.getSubscription(subscriptionName));
 
+        if (subscription == null) {
+            if (properties.createSubscriptionIfMissing()) {
+                log.warn("Subscription did not exist. Recreating... '{}/{}' topic:'{}' ack deadline:{}", projectId, subscriptionName, topicName, DEFAULT_ACK_DEADLINE_SECONDS);
+                subscription = createSubscription(topicName, subscriptionName);
+            } else {
+                throw new RuntimeException(String.format("Subscription '%s' not found for project '%s'", subscriptionName, projectId));
+            }
+        }
+
+        log.info("Subscription: {}", (subscription + "").replaceAll("\n", ""));
+    }
+
+    private Subscription createSubscription(String topicName, String subscriptionName) {
+        return runWithTimeout(() -> pubSubAdmin.createSubscription(subscriptionName, topicName, DEFAULT_ACK_DEADLINE_SECONDS));
+    }
+
+    private Topic createTopic(String topicName) {
+        return runWithTimeout(() -> pubSubAdmin.createTopic(topicName));
     }
 
     void verifyConnection() {
         log.info("Checking connection to pub/sub using '{}' topic", FAKE_TOPIC_NAME);
+        //With working connection, this call will return null, but failed connection would timeout and throw exception
         runWithTimeout(() -> pubSubAdmin.getTopic(FAKE_TOPIC_NAME));
     }
 

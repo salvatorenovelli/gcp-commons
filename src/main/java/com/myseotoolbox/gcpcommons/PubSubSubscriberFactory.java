@@ -1,6 +1,5 @@
 package com.myseotoolbox.gcpcommons;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.gcp.core.GcpProjectIdProvider;
 import org.springframework.cloud.gcp.pubsub.core.subscriber.PubSubSubscriberTemplate;
