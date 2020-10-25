@@ -10,10 +10,11 @@ import org.springframework.cloud.gcp.pubsub.support.BasicAcknowledgeablePubsubMe
 import java.util.function.Consumer;
 import java.util.function.Function;
 
+import static com.myseotoolbox.gcpcommons.LogUtils.shortToString;
+
 @Slf4j
 @RequiredArgsConstructor
 public class PubSubSubscriber<T> {
-    public static final int MAX_LOG_MESSAGE_LEN = 200;
     private final PubSubSubscriberTemplate template;
     private final PubSubConverter<T> pubSubConverter;
     private final ExponentialBackOff backOff = new ExponentialBackOff();
@@ -42,7 +43,7 @@ public class PubSubSubscriber<T> {
             if (runConsumer(function, event)) {
                 msg.ack();
             } else {
-                log.info("Processing of event {} was unsuccessful sending NACK", shortToString(event));
+                log.info("Processing of event {} was unsuccessful sending NACK", shortToString(event.toString()));
                 msg.nack();
                 executeBackoff();
             }
@@ -53,20 +54,17 @@ public class PubSubSubscriber<T> {
     private boolean runConsumer(Function<T, Boolean> consumer, T event) {
         try {
             Boolean apply = consumer.apply(event);
-            if (apply) log.debug("Processing of event completed: {}", shortToString(event));
+            if (apply) log.debug("Processing of event completed: {}", shortToString(event.toString()));
             return apply;
         } catch (Exception e) {
-            log.warn("Error while processing event: " + shortToString(event), e);
+            log.warn("Error while processing event: " + shortToString(event.toString()), e);
             return false;
         }
     }
 
-    private String shortToString(T event) {
-        return event.toString().substring(0, MAX_LOG_MESSAGE_LEN);
-    }
 
     private String msgAsString(BasicAcknowledgeablePubsubMessage msg) {
-        return msg.toString().replaceAll("\n", "").replaceAll("\\\\\"", "\"").substring(0, MAX_LOG_MESSAGE_LEN);
+        return shortToString(msg.toString().replaceAll("\n", "").replaceAll("\\\\\"", "\""));
     }
 
     @SneakyThrows
