@@ -7,6 +7,8 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 
+import static com.myseotoolbox.gcpcommons.PubSubSubscriber.MAX_LOG_MESSAGE_LEN;
+
 
 @Data
 public class PubsubMessage {
@@ -32,7 +34,7 @@ public class PubsubMessage {
         return "PubsubMessage{" +
                 "publishTime=" + publishTime +
                 ", messageId='" + messageId + '\'' +
-                ", data=" + new String(data) +
+                ", data=" + new String(data).substring(0, MAX_LOG_MESSAGE_LEN) +
                 '}';
     }
 }
