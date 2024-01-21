@@ -1,10 +1,10 @@
 package com.myseotoolbox.gcpcommons;
 
+import com.google.cloud.spring.core.GcpProjectIdProvider;
+import com.google.cloud.spring.pubsub.PubSubAdmin;
 import com.google.pubsub.v1.Subscription;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cloud.gcp.core.GcpProjectIdProvider;
-import org.springframework.cloud.gcp.pubsub.PubSubAdmin;
 import org.springframework.util.Assert;
 
 import java.util.concurrent.CompletableFuture;

@@ -1,13 +1,12 @@
 package com.myseotoolbox.gcpcommons;
 
+import com.google.cloud.spring.pubsub.PubSubAdmin;
 import com.google.pubsub.v1.Subscription;
 import com.google.pubsub.v1.Topic;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.event.ApplicationStartedEvent;
-import org.springframework.cloud.gcp.pubsub.PubSubAdmin;
 import org.springframework.context.event.EventListener;
-import org.springframework.util.Assert;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;

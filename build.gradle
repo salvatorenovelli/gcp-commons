@@ -1,13 +1,15 @@
 plugins {
-    id 'maven'
     id 'java-library'
 }
 
 
 group = 'com.github.salvatorenovelli'
-version = '1.5.3'
-sourceCompatibility = '1.8'
+version = '2.0.0'
 
+java {
+    sourceCompatibility = "17"
+    targetCompatibility = "17"
+}
 
 repositories {
     mavenCentral()
@@ -25,17 +27,16 @@ tasks.withType(JavaCompile) {
 }
 
 
-
 dependencies {
     implementation group: 'org.springframework.boot', name: 'spring-boot-autoconfigure', version: '2.1.0.RELEASE'
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor:2.1.0.RELEASE'
-    implementation group: 'org.springframework.cloud', name: 'spring-cloud-gcp-pubsub', version: '1.2.0.RC2'
-    implementation('org.springframework.cloud:spring-cloud-gcp-starter-pubsub:1.1.2.RELEASE')
+    implementation 'com.google.cloud:spring-cloud-gcp-pubsub:5.0.0'
+    implementation 'com.google.cloud:spring-cloud-gcp-starter-pubsub:5.0.0'
 
     implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.10.0'
     implementation 'com.google.guava:guava:27.1-jre'
-    implementation 'org.projectlombok:lombok:1.18.10'
-    annotationProcessor 'org.projectlombok:lombok:1.18.10'
+    implementation 'org.projectlombok:lombok:1.18.30'
+    annotationProcessor 'org.projectlombok:lombok:1.18.30'
     // Use JUnit test framework
     testImplementation 'junit:junit:4.12'
 }

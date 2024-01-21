@@ -1,8 +1,8 @@
 package com.myseotoolbox.gcpcommons;
 
+import com.google.cloud.spring.core.GcpProjectIdProvider;
+import com.google.cloud.spring.pubsub.core.subscriber.PubSubSubscriberTemplate;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cloud.gcp.core.GcpProjectIdProvider;
-import org.springframework.cloud.gcp.pubsub.core.subscriber.PubSubSubscriberTemplate;
 
 
 @Slf4j

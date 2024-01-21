@@ -1,8 +1,8 @@
 package com.myseotoolbox.gcpcommons;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.cloud.spring.pubsub.support.converter.PubSubMessageConversionException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cloud.gcp.pubsub.support.converter.PubSubMessageConversionException;
 
 import java.io.IOException;
 
