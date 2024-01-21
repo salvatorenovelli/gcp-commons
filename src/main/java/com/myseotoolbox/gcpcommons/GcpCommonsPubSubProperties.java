@@ -16,9 +16,9 @@ import java.util.Map;
 @ConfigurationProperties(prefix = "com.myseotoolbox.gcpcommons.pubsub")
 public class GcpCommonsPubSubProperties {
     private boolean createTopicIfMissing = true;
-    private final List<String> topics = Collections.emptyList();
+    private List<String> topics = Collections.emptyList();
     private boolean createSubscriptionIfMissing = true;
-    private final Map<String, String> subscriptions = Collections.emptyMap();
+    private Map<String, String> subscriptions = Collections.emptyMap();
 
     public boolean createTopicIfMissing() {
         return createTopicIfMissing;
