@@ -38,7 +38,7 @@ class PubSubConnectionVerification {
 
     private void checkTopics() {
         List<String> topics = properties.getTopics();
-        if (topics.size() > 0) {
+        if (!topics.isEmpty()) {
             topics.forEach(this::verifyTopic);
         } else {
             verifyConnection();
