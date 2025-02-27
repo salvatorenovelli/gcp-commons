@@ -4,7 +4,7 @@ plugins {
 }
 
 group = 'com.github.salvatorenovelli'
-version = '2.4.2'
+version = '2.4.3'
 
 java {
     sourceCompatibility = "17"
@@ -16,12 +16,6 @@ repositories {
     maven { url 'https://repo.spring.io/milestone' }
 }
 
-tasks.register('debugJitPack') {
-    doLast {
-        println "=== JitPack Debug ==="
-        fileTree("$buildDir/libs").files.each { println "✅ Found: " + it }
-    }
-}
 
 
 dependencies {
@@ -33,4 +27,14 @@ dependencies {
     implementation 'com.google.guava:guava:27.1-jre'
     implementation 'org.projectlombok:lombok:1.18.30'
     annotationProcessor 'org.projectlombok:lombok:1.18.30'
+}
+
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+            artifact("$buildDir/libs/${project.name}-${version}.jar") // Explicit JAR path
+        }
+    }
 }

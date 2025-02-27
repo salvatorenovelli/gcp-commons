@@ -1,6 +1,3 @@
 jdk:
   - openjdk17
 
-install:
-  - ./gradlew clean assemble debugJitPack
-  - ls -l build/libs/
