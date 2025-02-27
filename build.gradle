@@ -4,7 +4,7 @@ plugins {
 
 
 group = 'com.github.salvatorenovelli'
-version = '2.2.0'
+version = '2.3.0'
 
 java {
     sourceCompatibility = "17"
@@ -30,10 +30,10 @@ tasks.withType(JavaCompile) {
 dependencies {
     implementation group: 'org.springframework.boot', name: 'spring-boot-autoconfigure', version: '2.1.0.RELEASE'
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor:2.1.0.RELEASE'
-    implementation 'com.google.cloud:spring-cloud-gcp-pubsub:5.4.1'
-    implementation 'com.google.cloud:spring-cloud-gcp-starter-pubsub:5.4.1'
+    implementation 'com.google.cloud:spring-cloud-gcp-pubsub:6.0.1'
+    implementation 'com.google.cloud:spring-cloud-gcp-starter-pubsub:6.0.1'
 
-    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.10.0'
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.13.4.2'
     implementation 'com.google.guava:guava:27.1-jre'
     implementation 'org.projectlombok:lombok:1.18.30'
     annotationProcessor 'org.projectlombok:lombok:1.18.30'
