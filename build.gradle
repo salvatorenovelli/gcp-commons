@@ -11,7 +11,7 @@ java {
 }
 
 group = 'com.myseotoolbox'
-version = '2.4.6'
+version = '3.0.0'
 project.archivesBaseName = rootProject.name
 
 java {
@@ -24,7 +24,7 @@ repositories {
 }
 
 dependencies {
-    implementation group: 'org.springframework.boot', name: 'spring-boot-autoconfigure', version: '2.1.0.RELEASE'
+    implementation group: 'org.springframework.boot', name: 'spring-boot-autoconfigure', version: '3.0.7'
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor:2.1.0.RELEASE'
     implementation 'com.google.cloud:spring-cloud-gcp-pubsub:6.0.1'
     implementation 'com.google.cloud:spring-cloud-gcp-starter-pubsub:6.0.1'

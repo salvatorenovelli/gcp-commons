@@ -38,8 +38,8 @@ public class PubSubAutoConfiguration {
     }
 
     @Bean
-    public PubSubSubscriberFactory getPubSubSubscriberFactory(PubSubSubscriberTemplate template, MessageConverter converter, GcpProjectIdProvider provider) {
-        return new PubSubSubscriberFactory(template, converter, provider);
+    public PubSubSubscriberFactory getPubSubSubscriberFactory(PubSubSubscriberTemplate template, PubSubAdmin pubSubAdmin, MessageConverter converter, GcpProjectIdProvider provider) {
+        return new PubSubSubscriberFactory(template, pubSubAdmin, converter, provider);
     }
 
 
