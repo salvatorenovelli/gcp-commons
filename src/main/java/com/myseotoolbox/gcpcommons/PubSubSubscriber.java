@@ -22,6 +22,7 @@ import static com.myseotoolbox.gcpcommons.LogUtils.shortToString;
 @Slf4j
 @RequiredArgsConstructor
 public class PubSubSubscriber<T> {
+    private final GcpCommonsPubSubProperties properties;
     private final PubSubSubscriberTemplate template;
     private final PubSubAdmin pubSubAdmin;
     private final PubSubConverter<T> pubSubConverter;
@@ -94,11 +95,11 @@ public class PubSubSubscriber<T> {
 
     private <T> T runWithTimeout(Supplier<T> supplier) {
         try {
-            return CompletableFuture.supplyAsync(supplier).get(10, TimeUnit.SECONDS);
+            return CompletableFuture.supplyAsync(supplier).get(properties.getCommandTimeoutSeconds(), TimeUnit.SECONDS);
         } catch (InterruptedException | ExecutionException | TimeoutException e) {
             log.warn("Exception while executing pubsub command. This can be caused by bad permissions in credentials. " +
                     "Try to set DEBUG log level to io.grpc & com.google.api.client");
-            throw new RuntimeException("Unable to execute PubSub command. (timeout " + 10 + " seconds)", e);
+            throw new RuntimeException("Unable to execute PubSub command. (timeout " + properties.getCommandTimeoutSeconds() + " seconds)", e);
         }
     }
 }

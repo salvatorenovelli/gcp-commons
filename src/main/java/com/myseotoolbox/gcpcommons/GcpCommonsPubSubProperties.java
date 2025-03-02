@@ -6,7 +6,6 @@ import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -15,6 +14,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 @ConfigurationProperties(prefix = "com.myseotoolbox.gcpcommons.pubsub")
 public class GcpCommonsPubSubProperties {
+    private Integer commandTimeoutSeconds = 30;
     private boolean createTopicIfMissing = true;
     private List<String> topics = Collections.emptyList();
     private boolean createSubscriptionIfMissing = true;

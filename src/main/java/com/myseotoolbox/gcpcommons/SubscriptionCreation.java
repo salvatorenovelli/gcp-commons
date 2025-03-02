@@ -16,20 +16,20 @@ import java.util.concurrent.TimeoutException;
 @RequiredArgsConstructor
 public class SubscriptionCreation {
 
-    private static final long CONNECTION_TIMEOUT_SECONDS = 10;
     private static final int ACK_DEADLINE = 600;
     private final GcpProjectIdProvider projectIdProvider;
     private final PubSubAdmin admin;
     private final String topicName;
     private final String subscriptionName;
+    private final GcpCommonsPubSubProperties properties;
 
 
     public void createIfNotExist() {
         try {
-            createSubscription().get(CONNECTION_TIMEOUT_SECONDS, TimeUnit.SECONDS);
+            createSubscription().get(properties.getCommandTimeoutSeconds(), TimeUnit.SECONDS);
         } catch (InterruptedException | ExecutionException | TimeoutException e) {
             log.warn("Exception while connecting to PubSub. This can be caused by bad permissions in credentials. Try to set DEBUG log level to io.grpc & com.google.api.client");
-            throw new RuntimeException("Unable to connect to PubSub with timeout of " + CONNECTION_TIMEOUT_SECONDS + " seconds", e);
+            throw new RuntimeException("Unable to connect to PubSub with timeout of " + properties.getCommandTimeoutSeconds() + " seconds", e);
         }
     }
 

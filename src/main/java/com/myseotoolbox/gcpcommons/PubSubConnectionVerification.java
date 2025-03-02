@@ -93,10 +93,10 @@ class PubSubConnectionVerification {
 
     private <T> T runWithTimeout(Supplier<T> supplier) {
         try {
-            return CompletableFuture.supplyAsync(supplier).get(DEFAULT_TIMEOUT, TimeUnit.SECONDS);
+            return CompletableFuture.supplyAsync(supplier).get(properties.getCommandTimeoutSeconds(), TimeUnit.SECONDS);
         } catch (InterruptedException | ExecutionException | TimeoutException e) {
             log.warn("Exception while executing pubsub command. This can be caused by bad permissions in credentials. Try to set DEBUG log level to io.grpc & com.google.api.client");
-            throw new RuntimeException("Unable to execute PubSub command. (timeout " + DEFAULT_TIMEOUT + " seconds)", e);
+            throw new RuntimeException("Unable to execute PubSub command. (timeout " + properties.getCommandTimeoutSeconds() + " seconds)", e);
         }
     }
 }

@@ -20,7 +20,6 @@ import org.springframework.context.annotation.Bean;
 @AutoConfigureAfter(GcpContextAutoConfiguration.class)
 @ConditionalOnClass(GcpCommonsPubSubProperties.class)
 public class PubSubAutoConfiguration {
-    private final GcpCommonsPubSubProperties properties;
 
     @Bean
     public MessageConverter getMessageConverter(ObjectMapper mapper) {
@@ -33,13 +32,13 @@ public class PubSubAutoConfiguration {
     }
 
     @Bean
-    public PubSubConnectionVerification getPubSubConnectionVerification(GcpProjectIdProvider projectIdProvider, PubSubAdmin pubSubAdmin) {
+    public PubSubConnectionVerification getPubSubConnectionVerification(GcpCommonsPubSubProperties properties, GcpProjectIdProvider projectIdProvider, PubSubAdmin pubSubAdmin) {
         return new PubSubConnectionVerification(projectIdProvider.getProjectId(), pubSubAdmin, properties);
     }
 
     @Bean
-    public PubSubSubscriberFactory getPubSubSubscriberFactory(PubSubSubscriberTemplate template, PubSubAdmin pubSubAdmin, MessageConverter converter, GcpProjectIdProvider provider) {
-        return new PubSubSubscriberFactory(template, pubSubAdmin, converter, provider);
+    public PubSubSubscriberFactory getPubSubSubscriberFactory(GcpCommonsPubSubProperties properties, PubSubSubscriberTemplate template, PubSubAdmin pubSubAdmin, MessageConverter converter, GcpProjectIdProvider provider) {
+        return new PubSubSubscriberFactory(properties, template, pubSubAdmin, converter, provider);
     }
 
 
