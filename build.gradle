@@ -10,7 +10,7 @@ java {
 }
 
 group = 'com.myseotoolbox'
-version = '4.0.1'
+version = '4.0.3'
 
 base {
     archivesName.set(rootProject.name)
@@ -108,8 +108,8 @@ publishing {
     repositories {
         maven {
             name = "OSSRH"
-            url = "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
-            //url = "https://s01.oss.sonatype.org/content/repositories/snapshots/"
+            url = "https://ossrh-staging-api.central.sonatype.com/service/local/staging/deploy/maven2/"
+            // url = "https://central.sonatype.com/repository/maven-snapshots/"
 
             credentials {
                 username = findProperty("ossrhUsername")
