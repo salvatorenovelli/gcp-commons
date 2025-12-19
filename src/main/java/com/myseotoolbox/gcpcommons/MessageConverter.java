@@ -1,10 +1,9 @@
 package com.myseotoolbox.gcpcommons;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.cloud.spring.pubsub.support.converter.PubSubMessageConversionException;
 import lombok.RequiredArgsConstructor;
-
-import java.io.IOException;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.ObjectMapper;
 
 @RequiredArgsConstructor
 public class MessageConverter {
@@ -13,7 +12,7 @@ public class MessageConverter {
     public <T> T fromPubSubMessage(PubsubMessage message, Class<T> type) {
         try {
             return objectMapper.readerFor(type).readValue(message.getData());
-        } catch (IOException ex) {
+        } catch (JacksonException ex) {
             throw new PubSubMessageConversionException("JSON deserialization of an object of type " + type.getName() + " failed.", ex);
         }
     }

@@ -10,7 +10,7 @@ java {
 }
 
 group = 'com.myseotoolbox'
-version = '4.0.5'
+version = '4.0.6'
 
 base {
     archivesName.set(rootProject.name)
@@ -31,8 +31,8 @@ dependencies {
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor:2.1.0.RELEASE'
     implementation 'com.google.cloud:spring-cloud-gcp-pubsub:7.4.1'
     implementation 'com.google.cloud:spring-cloud-gcp-starter-pubsub:7.4.1'
-    implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.4.2'
     implementation 'com.google.guava:guava:27.1-jre'
+    implementation 'tools.jackson.core:jackson-databind:3.0.3'
 
     compileOnly 'org.projectlombok:lombok:1.18.42'
     annotationProcessor 'org.projectlombok:lombok:1.18.42'
