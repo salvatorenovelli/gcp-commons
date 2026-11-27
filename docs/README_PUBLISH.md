@@ -1,3 +1,8 @@
+---
+type: Runbook
+title: "Publishing gcp-commons"
+description: "Notes on publishing gcp-commons: the GitHub action, where the secrets are, the publish command and the repository."
+---
 
 
 
