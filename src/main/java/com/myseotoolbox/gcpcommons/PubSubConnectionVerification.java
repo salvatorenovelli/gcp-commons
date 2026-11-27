@@ -58,7 +58,7 @@ class PubSubConnectionVerification {
             }
         }
 
-        log.info("Successfully verified topic name '{}': {}", topicName, topic);
+        log.info("Successfully verified topic name '{}': {}", topicName, topic.getName());
     }
 
     private void verifySubscription(String topicName, String subscriptionName) {
