@@ -10,7 +10,7 @@ java {
 }
 
 group = 'com.myseotoolbox'
-version = '4.0.9-SNAPSHOT'
+version = '4.0.9'
 
 base {
     archivesName.set(rootProject.name)
