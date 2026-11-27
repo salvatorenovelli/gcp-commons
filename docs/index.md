@@ -1,3 +1,3 @@
 # docs
 
-* [Publishing gcp-commons](README_PUBLISH.md) - Notes on publishing gcp-commons: the GitHub action, where the secrets are, the publish command and the repository.
+* [Publishing gcp-commons](README_PUBLISH.md) - How gcp-commons is published: a tag, the Cloud Build trigger, and the Maven repository in Artifact Registry that anyone can read.

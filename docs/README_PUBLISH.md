@@ -1,22 +1,24 @@
 ---
 type: Runbook
 title: "Publishing gcp-commons"
-description: "Notes on publishing gcp-commons: the GitHub action, where the secrets are, the publish command and the repository."
+description: "How gcp-commons is published: a tag, the Cloud Build trigger, and the Maven repository in Artifact Registry that anyone can read."
 ---
 
+A pushed tag `v*` starts the Cloud Build trigger `gcp-commons-publish`, which runs `cloudbuild.yaml`: it builds,
+runs the tests and publishes the jar to the Maven repository `myseotoolbox-maven` in Artifact Registry
+(`europe-west2`, project `my-seo-buddy`). The version is available as soon as the build ends.
 
+Anyone can read the repository, so a consumer needs only its address:
 
-GitHub action `.github/workflows/gradle-publish.yaml`: a pushed tag `v*` builds, publishes to the staging
-repository and uploads it to the Central Portal with `publishing_type=automatic`, so Sonatype releases it to Maven
-Central when it passes validation. Without that parameter the deployment waits at
-`https://central.sonatype.com/publishing` for a person to publish it
-([OSSRH Staging API](https://central.sonatype.org/publish/publish-portal-ossrh-staging-api/)).
+```
+repositories {
+    mavenCentral()
+    maven { url 'https://europe-west2-maven.pkg.dev/my-seo-buddy/myseotoolbox-maven' }
+}
+```
 
-Secrets are stored in ~/.gradle/gradle.properties
-to extract key to copy into github secrets `gpg --export-secret-keys --armor XXXXXXX > local.asc`
+The versions up to 4.0.8 are on Maven Central, from the time the library was published through Sonatype.
 
-To publish `./gradlew clean build sign publish`
-
-Repo is: `https://s01.oss.sonatype.org/#welcome`
-
-
+To publish from a machine: `./gradlew publish`, with `gcloud` logged in to the project. `build.gradle` applies
+Google's Gradle plugin only for that task, because the plugin looks for Google credentials when it is applied
+([authentication](https://docs.cloud.google.com/artifact-registry/docs/java/authentication)).

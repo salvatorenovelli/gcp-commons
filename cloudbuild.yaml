@@ -1,0 +1,4 @@
+steps:
+  - name: 'eclipse-temurin:25-jdk'
+    entrypoint: './gradlew'
+    args: ['build', 'publish', '--no-daemon']
