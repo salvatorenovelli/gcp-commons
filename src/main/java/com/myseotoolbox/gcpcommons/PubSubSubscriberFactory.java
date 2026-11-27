@@ -1,5 +1,7 @@
 package com.myseotoolbox.gcpcommons;
 
+import com.google.api.client.util.ExponentialBackOff;
+import com.google.api.client.util.Sleeper;
 import com.google.cloud.spring.core.GcpProjectIdProvider;
 import com.google.cloud.spring.pubsub.PubSubAdmin;
 import com.google.cloud.spring.pubsub.core.subscriber.PubSubSubscriberTemplate;
@@ -27,11 +29,11 @@ public class PubSubSubscriberFactory {
     }
 
     public PubSubSubscriber<PubsubMessage> buildRaw(String topicName, String subscriptionName) {
-        return new PubSubSubscriber<>(properties, template, pubSubAdmin, m -> m, projectId, topicName, subscriptionName);
+        return new PubSubSubscriber<>(properties, template, pubSubAdmin, m -> m, projectId, topicName, subscriptionName, new ExponentialBackOff(), Sleeper.DEFAULT);
     }
 
     public <T> PubSubSubscriber<T> buildTyped(String topicName, String subscriptionName, Class<T> payloadType) {
         PubSubConverter<T> pubSubConverter = new TypedPubSubConverter<T>(payloadType, converter);
-        return new PubSubSubscriber<T>(properties, template, pubSubAdmin, pubSubConverter, projectId, topicName, subscriptionName);
+        return new PubSubSubscriber<T>(properties, template, pubSubAdmin, pubSubConverter, projectId, topicName, subscriptionName, new ExponentialBackOff(), Sleeper.DEFAULT);
     }
 }

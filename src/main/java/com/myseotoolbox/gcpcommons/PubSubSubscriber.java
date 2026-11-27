@@ -1,6 +1,8 @@
 package com.myseotoolbox.gcpcommons;
 
+import com.google.api.client.util.BackOff;
 import com.google.api.client.util.ExponentialBackOff;
+import com.google.api.client.util.Sleeper;
 import com.google.cloud.spring.pubsub.PubSubAdmin;
 import com.google.cloud.spring.pubsub.core.subscriber.PubSubSubscriberTemplate;
 import com.google.cloud.spring.pubsub.support.BasicAcknowledgeablePubsubMessage;
@@ -9,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
+import java.io.IOException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -26,10 +29,11 @@ public class PubSubSubscriber<T> {
     private final PubSubSubscriberTemplate template;
     private final PubSubAdmin pubSubAdmin;
     private final PubSubConverter<T> pubSubConverter;
-    private final ExponentialBackOff backOff = new ExponentialBackOff();
     private final String projectId;
     private final String topicName;
     private final String subscriptionName;
+    private final ExponentialBackOff backOff;
+    private final Sleeper sleeper;
 
     /**
      * Execute back off if exception is thrown
@@ -54,6 +58,7 @@ public class PubSubSubscriber<T> {
             log.debug("Event received: {}", msgAsString(msg));
             if (runConsumer(function, event)) {
                 msg.ack();
+                restartBackoff();
             } else {
                 log.info("Processing of event {} was unsuccessful sending NACK", shortToString(event.toString()));
                 msg.nack();
@@ -88,9 +93,23 @@ public class PubSubSubscriber<T> {
 
     @SneakyThrows
     private void executeBackoff() {
-        long delay = backOff.nextBackOffMillis();
+        long delay = nextBackoffMillis();
         log.warn("Backing off after error with delay of {}ms", delay);
-        Thread.sleep(delay);
+        sleeper.sleep(delay);
+    }
+
+    /**
+     * Synchronized because ExponentialBackOff is not thread-safe and Pub/Sub delivers on several threads.
+     */
+    private synchronized void restartBackoff() {
+        backOff.reset();
+    }
+
+    private synchronized long nextBackoffMillis() throws IOException {
+        long delay = backOff.nextBackOffMillis();
+        boolean backOffHasPassedItsTimeLimit = delay == BackOff.STOP;
+        if (backOffHasPassedItsTimeLimit) return backOff.getMaxIntervalMillis();
+        return delay;
     }
 
     private <T> T runWithTimeout(Supplier<T> supplier) {
