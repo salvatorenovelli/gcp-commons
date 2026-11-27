@@ -11,7 +11,7 @@ java {
 }
 
 group = 'com.myseotoolbox'
-version = '4.0.9-java17-SNAPSHOT'
+version = '4.0.9-java17'
 project.archivesBaseName = rootProject.name
 
 java {
