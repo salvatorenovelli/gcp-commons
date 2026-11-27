@@ -1,7 +1,13 @@
 plugins {
     id 'java-library'
     id 'maven-publish'
-    id 'signing'
+    id 'com.google.cloud.artifactregistry.gradle-plugin' version '2.2.5' apply false
+}
+
+// The plugin looks for Google credentials as soon as it is applied, and fails a build that has none.
+// So only a publish to the repository applies it; a build, a test run or publishToMavenLocal needs no credentials.
+if (gradle.startParameter.taskNames.contains('publish')) {
+    apply plugin: 'com.google.cloud.artifactregistry.gradle-plugin'
 }
 
 
@@ -11,7 +17,7 @@ java {
 }
 
 group = 'com.myseotoolbox'
-version = '4.0.9-java17'
+version = '4.0.10-java17-SNAPSHOT'
 project.archivesBaseName = rootProject.name
 
 java {
@@ -41,19 +47,6 @@ dependencies {
 artifacts {
     archives jar, javadocJar, sourcesJar
 }
-
-signing {
-
-    def signingKey = findProperty("signingKey")
-    if (signingKey != null) {
-        //In CI we have the key stored in ORG_GRADLE_PROJECT_signingKey instead of accessing file specified in
-        // local gradle.properties
-        def signingPassword = findProperty("signingKeyPassword")
-        useInMemoryPgpKeys(signingKey, signingPassword)
-    }
-    sign publishing.publications
-}
-
 
 tasks.named('test') {
     useJUnitPlatform()
@@ -107,13 +100,7 @@ publishing {
 
     repositories {
         maven {
-            name = "OSSRH"
-            url = "https://ossrh-staging-api.central.sonatype.com/service/local/staging/deploy/maven2/"
-
-            credentials {
-                username = findProperty("ossrhUsername")
-                password = findProperty("ossrhPassword")
-            }
+            url = "artifactregistry://europe-west2-maven.pkg.dev/my-seo-buddy/myseotoolbox-maven"
         }
     }
 }
